@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Contador de Prazo de Embargos de Declaração</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    color-scheme: light;
+    --paper: #eef1f5;
+    --card: #ffffff;
+    --ink: #16233d;
+    --ink-soft: #5b6478;
+    --ink-faint: #8993a6;
+    --brass: #9c6b1f;
+    --line: #d8dce3;
+    --sage-bg: #eef1e6;
+    --green-ok: #1f7a4d;
+    --green-ok-bg: #eaf4ee;
+    --red-over: #b3261e;
+    --red-over-bg: #fbeceb;
+    --amber: #8a6316;
+    --amber-bg: #fbf3e0;
+    --amber-line: #e8cd8a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 20px 48px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    background-image: radial-gradient(circle at 50% 0%, #f8f9fb 0%, var(--paper) 62%);
+    color: var(--ink);
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  .masthead { text-align: center; margin-bottom: 30px; }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 10px;
+  }
+  .masthead h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .masthead .subtitle {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .rule { height: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); padding-top: 3px; max-width: 620px; margin: 0 auto; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(22,35,61,0.04);
+  }
+  .card h2 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 11.5px; color: var(--ink-soft); font-weight: 600; }
+  select, input[type="number"] {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 9px 11px;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+  }
+  select { font-family: 'Inter', sans-serif; min-width: 260px; }
+  .date-combo input[type="text"] { font-family: 'IBM Plex Mono', 'Inter', monospace; }
+  select:focus, input:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(156,107,31,0.14); }
+  input[type="number"] { width: 90px; }
+  .date-combo { position: relative; display: flex; align-items: center; width: 140px; }
+  .date-combo input[type="text"] { width: 140px; padding-right: 32px; }
+  .date-combo input[type="text"].invalid { border-color: var(--red-over); background: var(--red-over-bg); }
+  .date-picker-icon {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
+    border: none;
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0.65;
+  }
+  .date-picker-icon:hover { opacity: 1; background: var(--sage-bg); }
+  .cal-popup {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    width: 240px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(22,35,61,0.14);
+    padding: 12px;
+  }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .cal-label { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 13.5px; color: var(--ink); text-transform: capitalize; }
+  .cal-nav {
+    background: none; border: 1px solid var(--line); color: var(--ink); width: 24px; height: 24px;
+    border-radius: 3px; padding: 0; font-size: 13px; line-height: 1; cursor: pointer;
+  }
+  .cal-nav:hover { background: var(--sage-bg); }
+  .cal-nav:disabled { opacity: .28; cursor: not-allowed; }
+  .cal-nav:disabled:hover { background: none; }
+  .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 2px; }
+  .cal-weekdays span { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .03em; color: var(--ink-faint); padding: 4px 0; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-day {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink);
+    background: none; border: 1px solid transparent; border-radius: 3px; cursor: pointer; padding: 0;
+  }
+  .cal-day:hover { background: var(--sage-bg); }
+  .cal-day.empty { cursor: default; pointer-events: none; }
+  .cal-day.fora-do-limite { opacity: .28; cursor: default; }
+  .cal-day.fora-do-limite:hover { background: none; }
+  .cal-day.nao-util::after {
+    content: ""; position: absolute; bottom: 3px; width: 3px; height: 3px; border-radius: 50%; background: var(--brass);
+  }
+  .cal-day.hoje { border-color: var(--brass); }
+  .cal-day.selecionado { background: var(--ink); color: #fff; font-weight: 600; }
+  .cal-day.selecionado.nao-util::after { background: #fff; }
+  button {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  button:hover { background: #0f1a2e; }
+  button#btnCalcular.calculado { background: #dde1e7; color: #97a0af; cursor: default; }
+  button#btnCalcular.calculado:hover { background: #dde1e7; }
+  .hidden { display: none; }
+  table.detail-table { width: 100%; border-collapse: collapse; margin-top: 4px; border: 1px solid var(--line); font-family: 'IBM Plex Mono', monospace; }
+  table.detail-table thead th {
+    background: var(--ink);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 9px 12px;
+    text-align: left;
+  }
+  table.detail-table tbody td {
+    padding: 8px 12px;
+    border-bottom: none;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  table.detail-table tbody tr:nth-child(odd) { background: var(--sage-bg); }
+  table.detail-table tbody tr:nth-child(even) { background: #fff; }
+  table.detail-table tbody tr.milestone td { font-family: 'Inter', sans-serif; font-weight: 700; color: var(--ink); border-left: 3px solid var(--brass); }
+  table.detail-table tbody tr.naoutil td { color: var(--ink-faint); font-style: italic; }
+  .result-box {
+    background: var(--green-ok-bg);
+    border: 1.5px solid var(--green-ok);
+    border-radius: 3px;
+    padding: 22px 18px;
+    text-align: center;
+    margin-top: 6px;
+  }
+  .result-box.overdue { background: var(--red-over-bg); border-color: var(--red-over); }
+  .result-box .final-date {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--green-ok);
+    margin: 4px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .result-box.overdue .final-date { color: var(--red-over); }
+  .result-box .final-wd { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin-bottom: 10px; }
+  .countdown { font-size: 13px; color: var(--ink); margin-top: 8px; font-family: 'IBM Plex Mono', monospace; }
+  .countdown b { font-variant-numeric: tabular-nums; }
+  .legal-basis {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .legal-basis b { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; color: var(--ink); }
+  .warn {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-line);
+    border-radius: 3px;
+    padding: 11px 13px;
+    font-size: 12.5px;
+    color: var(--amber);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  .footer-note { font-size: 11px; color: var(--ink-faint); margin-top: 22px; text-align: center; line-height: 1.6; }
+  .version-badge {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Tribunal de Justiça de Roraima · 1ª Vara de Fazenda Pública · Comarca de Boa Vista</div>
+    <h1>Contador de Prazo de Embargos de Declaração</h1>
+    <div class="subtitle">Art. 1.023 do Código de Processo Civil</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="card">
+    <h2>Dados da intimação</h2>
+    <div class="form-row">
+      <div class="field">
+        <label for="modoIntimacao">Forma de intimação</label>
+        <select id="modoIntimacao" onchange="onModoChange()">
+          <option value="djen" selected>DJEN — Diário de Justiça (disponibilização)</option>
+          <option value="dje">DJE — Domicílio Judicial Eletrônico (Fazenda Pública, MP e DPE — prazo em dobro)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:12px;">
+      <div class="field" id="campoDisp">
+        <label for="dispDate">Data de disponibilização no DJEN</label>
+        <div class="date-combo">
+          <input type="text" id="dispDate" placeholder="DD/MM/AAAA" inputmode="numeric" autocomplete="off">
+          <button type="button" class="date-picker-icon" id="dispDatePicker" aria-label="Escolher no calendário">📅</button>
+          <div class="cal-popup hidden" id="dispDateCal"></div>
+        </div>
+      </div>
+      <div class="field hidden" id="campoLeitura">
+        <label for="leituraDate">Data de leitura (consulta eletrônica ao Domicílio Judicial Eletrônico)</label>
+        <div class="date-combo">
+          <input type="text" id="leituraDate" placeholder="DD/MM/AAAA" inputmode="numeric" autocomplete="off">
+          <button type="button" class="date-picker-icon" id="leituraDatePicker" aria-label="Escolher no calendário">📅</button>
+          <div class="cal-popup hidden" id="leituraDateCal"></div>
+        </div>
+      </div>
+      <button id="btnCalcular" onclick="calcular()">Calcular prazo</button>
+    </div>
+    <div id="djeNota" class="warn hidden" style="margin-top:12px;">
+      Modo exclusivo para Fazenda Pública, Ministério Público e Defensoria Pública, que se intimam pelo Domicílio Judicial
+      Eletrônico e têm prazo em dobro (arts. 183 e 186, CPC; LC nº 80/1994, arts. 44, I, 89, I, e 128, I) — por isso o prazo é
+      sempre calculado em 10 dias úteis nesse modo. Este campo já engloba tanto a leitura efetiva quanto a leitura automática
+      (quando não há consulta em até 10 dias corridos do envio — art. 246, §1º-C, CPC, incluído pela Lei nº 14.195/2021, e
+      Resolução CNJ nº 569/2024). Informe aqui a data de leitura tal como registrada no Domicílio Judicial Eletrônico do
+      processo, seja ela efetiva ou automática.
+    </div>
+  </div>
+
+  <div id="resultado" class="hidden">
+    <div class="card">
+      <h2>Detalhamento do cálculo do prazo</h2>
+      <table id="tabelaDetalhamento" class="detail-table">
+        <thead><tr><th>Data</th><th>Descrição</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div id="prazoAplicadoNota" class="warn hidden"></div>
+      <div id="anoAlerta" class="warn hidden"></div>
+    </div>
+
+    <div class="card">
+      <h2>Prazo final</h2>
+      <div id="resultBox" class="result-box">
+        <div class="final-date" id="finalDate">—</div>
+        <div class="final-wd" id="finalWd"></div>
+        <div class="countdown" id="countdown"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Base legal e fonte dos dados</h2>
+    <div class="legal-basis">
+      <b>Contagem em dias úteis:</b> art. 219, CPC.<br>
+      <b>Exclusão do dia do começo / inclusão do vencimento / protração de início e vencimento para dia útil:</b> art. 224, caput e §1º, CPC.<br>
+      <b>Prazo de embargos de declaração:</b> art. 1.023, CPC — 5 dias úteis; 10 dias úteis no modo DJE (Fazenda Pública, MP e DPE), por força do prazo em dobro.<br>
+      <b>Termo inicial na intimação por Diário de Justiça eletrônico (DJEN):</b> art. 231, V, CPC c/c art. 4º, §3º, da Lei 11.419/2006; Resolução CNJ nº 455/2022, arts. 6º e 11, §3º — a publicação é considerada no 1º dia útil seguinte à disponibilização; o prazo começa a correr no 1º dia útil seguinte à publicação.<br>
+      <b>Termo inicial na intimação pelo Domicílio Judicial Eletrônico (DJE):</b> a intimação considera-se realizada na data de leitura/consulta eletrônica, efetiva ou automática quando não há consulta em até 10 dias corridos do envio (art. 246, §1º-C, CPC, incluído pela Lei nº 14.195/2021, e Resolução CNJ nº 569/2024), e o prazo começa a correr no 1º dia útil seguinte a essa data (art. 231, VI, CPC).<br>
+      <b>Prazo em dobro:</b> Fazenda Pública e Ministério Público — arts. 183 e 186, CPC (ressalvados os casos em que a lei fixar expressamente prazo próprio, art. 183, §2º, CPC); Defensoria Pública — LC nº 80/1994, arts. 44, I, 89, I, e 128, I. Como o Domicílio Judicial Eletrônico (DJE) é de uso obrigatório desses entes, o modo "DJE" aplica o dobro automaticamente (10 dias úteis); o modo "DJEN" não dobra o prazo.<br>
+      <b>Calendário de dias não úteis, feriados, pontos facultativos e prorrogações de prazo:</b> Projudi/TJRR (Decurso de Prazo — Dia Não Útil, ano 2026) e Portaria TJRR/PR nº 1558/2025 (Calendário de Feriados e Pontos Facultativos do TJRR — ano 2026), cadastrados e conferidos contra a lista oficial de feriados nacionais de 2026 e o calendário municipal de Boa Vista/RR. Suspensão de prazo de 01/01/2027 a 20/01/2027 incluída conforme informação repassada pelo usuário (sem número de portaria vinculado).
+    </div>
+  </div>
+
+  <footer style="text-align:center; margin-top:8px;">
+    <div class="rule" style="margin-bottom:16px;"></div>
+    <div class="footer-note">Ferramenta de apoio — sempre confirme o prazo diretamente no Projudi/DJEN/Domicílio Judicial Eletrônico do processo. Calendário de dias não úteis cadastrado para o ano de 2026, além da suspensão de prazo de 01/01/2027 a 20/01/2027.</div>
+    <div class="version-badge">Versão 1.5 · Atualizado em 18/08/2026</div>
+  </footer>
+</div>
+
+<script>
+// ---- Base de dias não úteis 2026 (TJRR / Comarca de Boa Vista) ----
+// Fontes: Projudi (Decurso de Prazo - Dia Não Útil / Prorrogação de Prazo) e
+// Portaria TJRR/PR nº 1558/2025 (Feriados Locais 2026), conferidas com feriados nacionais e calendário municipal de Boa Vista.
+const NAO_UTEIS_2026 = {
+  "2026-01-01": "Feriado Nacional (Confraternização Universal) / Recesso Forense",
+  "2026-01-02": "Recesso Forense / Ponto Facultativo (ref. 01/01)",
+  "2026-01-03": "Recesso Forense",
+  "2026-01-05": "Recesso Forense",
+  "2026-01-06": "Recesso Forense",
+  "2026-01-19": "Ponto Facultativo (ref. 20/01) — Comarca de Boa Vista",
+  "2026-01-20": "Feriado — Dia de São Sebastião (Comarca de Boa Vista)",
+  "2026-02-16": "Ponto Facultativo — Segunda-feira de Carnaval",
+  "2026-02-17": "Ponto Facultativo — Terça-feira de Carnaval",
+  "2026-02-18": "Ponto Facultativo — Quarta-feira de Cinzas",
+  "2026-04-01": "Semana Santa",
+  "2026-04-02": "Semana Santa (Quinta-feira Santa)",
+  "2026-04-03": "Semana Santa / Feriado Nacional (Paixão de Cristo)",
+  "2026-04-06": "Prorrogação de Prazo — Rompimento dos links de internet OI e Claro",
+  "2026-04-20": "Ponto Facultativo (ref. 21/04)",
+  "2026-04-21": "Feriado Nacional — Tiradentes",
+  "2026-05-01": "Feriado Nacional — Dia do Trabalhador",
+  "2026-06-01": "Prorrogação de Prazo — Portaria TJRR/PR nº 584/2026 (DJE 8121)",
+  "2026-06-04": "Feriado — Corpus Christi",
+  "2026-06-05": "Ponto Facultativo (ref. 04/06)",
+  "2026-06-08": "Prorrogação de Prazo — Portaria TJRR/PR nº 584/2026 (DJE 8121)",
+  "2026-06-29": "Feriado — Dia de São Pedro (Comarca de Boa Vista)",
+  "2026-07-09": "Feriado — Aniversário de Boa Vista",
+  "2026-07-10": "Ponto Facultativo (ref. 09/07) — Comarca de Boa Vista",
+  "2026-07-20": "Prorrogação de Prazo — Portaria TJRR/PR nº 766/2026 (DJE 8139)",
+  "2026-07-21": "Prorrogação de Prazo — Portaria TJRR/PR nº 766/2026 (DJE 8139)",
+  "2026-07-22": "Prorrogação de Prazo — Portaria TJRR/PR nº 766/2026 (DJE 8139)",
+  "2026-07-23": "Prorrogação de Prazo — Portaria TJRR/PR nº 766/2026 (DJE 8139)",
+  "2026-08-03": "Prorrogação de Prazo — Decisão de Suspensão de Prazo (SEI 0016033-03.2026.8.23.8000)",
+  "2026-08-10": "Ponto Facultativo (ref. 11/08)",
+  "2026-08-11": "Feriado — Dia dos Magistrados",
+  "2026-09-07": "Feriado Nacional — Independência do Brasil",
+  "2026-10-05": "Feriado — Aniversário do Estado de Roraima",
+  "2026-10-12": "Feriado Nacional — Nossa Senhora Aparecida",
+  "2026-10-28": "Feriado — Dia do Servidor Público",
+  "2026-11-02": "Feriado Nacional — Finados",
+  "2026-11-20": "Feriado Nacional — Dia da Consciência Negra",
+  "2026-12-07": "Ponto Facultativo (ref. 08/12)",
+  "2026-12-08": "Feriado — Dia da Justiça e Nossa Senhora da Conceição",
+  "2026-12-20": "Recesso Forense",
+  "2026-12-21": "Recesso Forense",
+  "2026-12-22": "Recesso Forense",
+  "2026-12-23": "Recesso Forense",
+  "2026-12-24": "Recesso Forense / Ponto Facultativo (ref. 25/12)",
+  "2026-12-25": "Feriado Nacional — Natal / Recesso Forense",
+  "2026-12-26": "Recesso Forense",
+  "2026-12-27": "Recesso Forense",
+  "2026-12-28": "Recesso Forense",
+  "2026-12-29": "Recesso Forense",
+  "2026-12-30": "Recesso Forense",
+  "2026-12-31": "Recesso Forense / Ponto Facultativo (ref. 01/01/2027)",
+  // Suspensão de prazo informada pelo usuário para janeiro/2027 (01/01/2027 a 20/01/2027)
+  "2027-01-01": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-02": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-03": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-04": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-05": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-06": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-07": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-08": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-09": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-10": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-11": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-12": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-13": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-14": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-15": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-16": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-17": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-18": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-19": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
+  "2027-01-20": "Suspensão de Prazo (01/01/2027 a 20/01/2027)"
+};
+
+// Feriados nacionais de data fixa (art. 1º da Lei nº 6.802/80 c/c leis específicas) — válidos para qualquer ano,
+// usados como reforço quando o cálculo ultrapassa o calendário específico de 2026 cadastrado acima.
+const FERIADOS_FIXOS_NACIONAIS = {
+  "01-01": "Feriado Nacional — Confraternização Universal",
+  "04-21": "Feriado Nacional — Tiradentes",
+  "05-01": "Feriado Nacional — Dia do Trabalhador",
+  "09-07": "Feriado Nacional — Independência do Brasil",
+  "10-12": "Feriado Nacional — Nossa Senhora Aparecida",
+  "11-02": "Feriado Nacional — Finados",
+  "11-15": "Feriado Nacional — Proclamação da República",
+  "11-20": "Feriado Nacional — Dia da Consciência Negra",
+  "12-25": "Feriado Nacional — Natal"
+};
+
+const DIAS_SEMANA = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+
+function toISO(d) {
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function toBR(d) {
+  const [y,m,day] = toISO(d).split("-");
+  return `${day}/${m}/${y}`;
+}
+function addDays(d, n) {
+  const r = new Date(d);
+  r.setDate(r.getDate() + n);
+  return r;
+}
+function motivoNaoUtil(d) {
+  const wd = d.getDay();
+  if (wd === 0) return "Domingo";
+  if (wd === 6) return "Sábado";
+  const iso = toISO(d);
+  if (NAO_UTEIS_2026[iso]) return NAO_UTEIS_2026[iso];
+  const mmdd = iso.substring(5);
+  if (FERIADOS_FIXOS_NACIONAIS[mmdd]) return FERIADOS_FIXOS_NACIONAIS[mmdd] + " (regra de data fixa — fora do calendário 2026 cadastrado)";
+  return null;
+}
+function isBusinessDay(d) {
+  return motivoNaoUtil(d) === null;
+}
+// Faixas com calendário específico efetivamente cadastrado (além da regra genérica de feriados fixos)
+function dataDentroDoCalendarioCadastrado(d) {
+  const iso = toISO(d);
+  if (iso >= "2026-01-01" && iso <= "2026-12-31") return true;
+  if (iso >= "2027-01-01" && iso <= "2027-01-20") return true;
+  return false;
+}
+function nextBusinessDayStrict(d) {
+  let r = addDays(d, 1);
+  while (!isBusinessDay(r)) r = addDays(r, 1);
+  return r;
+}
+function contarDiasUteis(inicio, n) {
+  const passos = [];
+  let d = new Date(inicio);
+  let count = 0;
+  let guard = 0;
+  while (count < n && guard < 400) {
+    guard++;
+    const util = isBusinessDay(d);
+    if (util) {
+      count++;
+      passos.push({ date: new Date(d), util: true, dayNumber: count });
+      if (count === n) break;
+    } else {
+      passos.push({ date: new Date(d), util: false, motivo: motivoNaoUtil(d) });
+    }
+    d = addDays(d, 1);
+  }
+  return { finalDate: d, passos };
+}
+// Lista, dia a dia, os dias não úteis estritamente entre "deExclusive" e "ateExclusive" —
+// usado para detalhar sábados, domingos, feriados etc. pulados ao localizar o próximo dia útil
+// (ex.: entre a disponibilização e a publicação, ou entre a publicação/leitura e o termo inicial).
+function diasPuladosEntre(deExclusive, ateExclusive) {
+  const linhas = [];
+  let d = addDays(deExclusive, 1);
+  let guard = 0;
+  while (toISO(d) !== toISO(ateExclusive) && guard < 60) {
+    linhas.push({ date: new Date(d), motivo: motivoNaoUtil(d) });
+    d = addDays(d, 1);
+    guard++;
+  }
+  return linhas;
+}
+function capitalizar(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+// Formata o motivo de um dia não útil no mesmo padrão do Projudi: sábados/domingos aparecem
+// sozinhos, os demais motivos (feriados, pontos facultativos, prorrogações) recebem o prefixo "Dia Não útil:".
+function formatarMotivo(motivo) {
+  if (motivo === "Sábado" || motivo === "Domingo") return motivo;
+  return `Dia Não útil: ${motivo}`;
+}
+
+let countdownTimer = null;
+
+// Aceita colar/digitar datas em vários formatos (DD/MM/AAAA, DD-MM-AAAA, AAAA-MM-DD,
+// inclusive coladas junto de outro texto, ex.: "09/08/2026 07:25" copiado do Projudi)
+// e devolve um objeto Date, ou null se não conseguir reconhecer.
+function parseDataFlexivel(str) {
+  if (!str) return null;
+  str = str.trim();
+  let m = str.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+  if (m) {
+    const dd = parseInt(m[1], 10), mm = parseInt(m[2], 10), yy = parseInt(m[3], 10);
+    const d = new Date(yy, mm - 1, dd);
+    if (d.getFullYear() === yy && d.getMonth() === mm - 1 && d.getDate() === dd) return d;
+    return null;
+  }
+  m = str.match(/(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);
+  if (m) {
+    const yy = parseInt(m[1], 10), mm = parseInt(m[2], 10), dd = parseInt(m[3], 10);
+    const d = new Date(yy, mm - 1, dd);
+    if (d.getFullYear() === yy && d.getMonth() === mm - 1 && d.getDate() === dd) return d;
+    return null;
+  }
+  return null;
+}
+
+function normalizarCampoData(input) {
+  const parsed = parseDataFlexivel(input.value);
+  if (parsed) {
+    input.value = toBR(parsed);
+    input.classList.remove("invalid");
+  } else if (input.value.trim() !== "") {
+    input.classList.add("invalid");
+  } else {
+    input.classList.remove("invalid");
+  }
+}
+
+function resetarBotaoCalcular() {
+  const btn = document.getElementById("btnCalcular");
+  if (btn) btn.classList.remove("calculado");
+}
+
+function ligarCampoDataTexto(textId) {
+  const textInput = document.getElementById(textId);
+  textInput.addEventListener("input", () => resetarBotaoCalcular());
+  textInput.addEventListener("paste", (e) => {
+    const pasted = (e.clipboardData || window.clipboardData).getData("text");
+    const parsed = parseDataFlexivel(pasted);
+    if (parsed) {
+      e.preventDefault();
+      textInput.value = toBR(parsed);
+      textInput.classList.remove("invalid");
+      resetarBotaoCalcular();
+    }
+  });
+  textInput.addEventListener("blur", () => normalizarCampoData(textInput));
+}
+
+// ---- Calendário customizado: mostra apenas os dias do mês exibido, sem dias de meses adjacentes ----
+const MESES_PT = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const DIAS_SEMANA_CURTO = ["dom","seg","ter","qua","qui","sex","sáb"];
+
+// Faixa navegável/selecionável no calendário: 01/01/2026 a 20/01/2027
+const CAL_MIN = new Date(2026, 0, 1);
+const CAL_MAX = new Date(2027, 0, 20);
+function calMonthIndex(y, m) { return y * 12 + m; }
+const CAL_MIN_MONTH = calMonthIndex(CAL_MIN.getFullYear(), CAL_MIN.getMonth());
+const CAL_MAX_MONTH = calMonthIndex(CAL_MAX.getFullYear(), CAL_MAX.getMonth());
+
+function criarCalendario(textId, triggerId, popupId) {
+  const textInput = document.getElementById(textId);
+  const triggerBtn = document.getElementById(triggerId);
+  const popupEl = document.getElementById(popupId);
+  let viewYear, viewMonth;
+
+  function render() {
+    const hoje = new Date();
+    const selecionada = parseDataFlexivel(textInput.value);
+    const primeiroDiaSemana = new Date(viewYear, viewMonth, 1).getDay();
+    const totalDias = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const idxAtual = calMonthIndex(viewYear, viewMonth);
+    const podeVoltar = idxAtual > CAL_MIN_MONTH;
+    const podeAvancar = idxAtual < CAL_MAX_MONTH;
+
+    let html = `<div class="cal-header">
+      <button type="button" class="cal-nav" data-nav="-1" aria-label="Mês anterior"${podeVoltar ? "" : " disabled"}>‹</button>
+      <div class="cal-label">${MESES_PT[viewMonth]} de ${viewYear}</div>
+      <button type="button" class="cal-nav" data-nav="1" aria-label="Próximo mês"${podeAvancar ? "" : " disabled"}>›</button>
+    </div>
+    <div class="cal-weekdays">${DIAS_SEMANA_CURTO.map(d => `<span>${d}</span>`).join("")}</div>
+    <div class="cal-grid">`;
+
+    for (let i = 0; i < primeiroDiaSemana; i++) {
+      html += `<span class="cal-day empty"></span>`;
+    }
+    for (let dia = 1; dia <= totalDias; dia++) {
+      const d = new Date(viewYear, viewMonth, dia);
+      const iso = toISO(d);
+      const classes = ["cal-day"];
+      const foraDoLimite = d < CAL_MIN || d > CAL_MAX;
+      const motivo = motivoNaoUtil(d);
+      if (motivo) classes.push("nao-util");
+      if (foraDoLimite) classes.push("fora-do-limite");
+      if (hoje.getFullYear() === viewYear && hoje.getMonth() === viewMonth && hoje.getDate() === dia) classes.push("hoje");
+      if (selecionada && selecionada.getFullYear() === viewYear && selecionada.getMonth() === viewMonth && selecionada.getDate() === dia) classes.push("selecionado");
+      const titleAttr = motivo && !foraDoLimite ? ` title="${motivo.replace(/"/g, "&quot;")}"` : "";
+      html += `<button type="button" class="${classes.join(" ")}" data-iso="${iso}"${titleAttr}>${dia}</button>`;
+    }
+    html += `</div>`;
+    popupEl.innerHTML = html;
+
+    popupEl.querySelectorAll(".cal-nav").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (btn.disabled) return;
+        viewMonth += parseInt(btn.dataset.nav, 10);
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        render();
+      });
+    });
+    popupEl.querySelectorAll(".cal-day:not(.empty):not(.fora-do-limite)").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const [yy, mm, dd] = btn.dataset.iso.split("-").map(Number);
+        textInput.value = toBR(new Date(yy, mm - 1, dd));
+        textInput.classList.remove("invalid");
+        resetarBotaoCalcular();
+        fechar();
+      });
+    });
+  }
+
+  function onDocClick(e) {
+    if (!popupEl.contains(e.target) && e.target !== triggerBtn) fechar();
+  }
+  function abrir() {
+    const atual = parseDataFlexivel(textInput.value) || new Date();
+    let vy = atual.getFullYear(), vm = atual.getMonth();
+    const idx = calMonthIndex(vy, vm);
+    if (idx < CAL_MIN_MONTH) { vy = CAL_MIN.getFullYear(); vm = CAL_MIN.getMonth(); }
+    else if (idx > CAL_MAX_MONTH) { vy = CAL_MAX.getFullYear(); vm = CAL_MAX.getMonth(); }
+    viewYear = vy;
+    viewMonth = vm;
+    render();
+    popupEl.classList.remove("hidden");
+    setTimeout(() => document.addEventListener("mousedown", onDocClick), 0);
+  }
+  function fechar() {
+    popupEl.classList.add("hidden");
+    document.removeEventListener("mousedown", onDocClick);
+  }
+
+  triggerBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (popupEl.classList.contains("hidden")) abrir(); else fechar();
+  });
+}
+
+function onModoChange() {
+  const modo = document.getElementById("modoIntimacao").value;
+  const campoDisp = document.getElementById("campoDisp");
+  const campoLeitura = document.getElementById("campoLeitura");
+  const djeNota = document.getElementById("djeNota");
+  resetarBotaoCalcular();
+  if (modo === "dje") {
+    campoDisp.classList.add("hidden");
+    campoLeitura.classList.remove("hidden");
+    djeNota.classList.remove("hidden");
+  } else {
+    campoDisp.classList.remove("hidden");
+    campoLeitura.classList.add("hidden");
+    djeNota.classList.add("hidden");
+  }
+}
+
+function calcular() {
+  const prazoBase = 5; // art. 1.023, CPC
+  const modoIntimacao = document.getElementById("modoIntimacao").value;
+  const emDobro = modoIntimacao === "dje"; // DJE = Fazenda Pública, MP e DPE (prazo em dobro sempre)
+  const prazoDias = emDobro ? prazoBase * 2 : prazoBase;
+
+  let disp = null, publicacao = null, termoInicial = null;
+
+  if (modoIntimacao === "dje") {
+    const leituraEl = document.getElementById("leituraDate");
+    disp = parseDataFlexivel(leituraEl.value);
+    if (!disp) { alert("Informe uma data de leitura válida (DD/MM/AAAA)."); leituraEl.classList.add("invalid"); return; }
+    termoInicial = nextBusinessDayStrict(disp);
+  } else {
+    const dispEl = document.getElementById("dispDate");
+    disp = parseDataFlexivel(dispEl.value);
+    if (!disp) { alert("Informe uma data de disponibilização válida (DD/MM/AAAA)."); dispEl.classList.add("invalid"); return; }
+    publicacao = nextBusinessDayStrict(disp);
+    termoInicial = nextBusinessDayStrict(publicacao);
+  }
+
+  document.getElementById("resultado").classList.remove("hidden");
+  document.getElementById("btnCalcular").classList.add("calculado");
+
+  const prazoNotaEl = document.getElementById("prazoAplicadoNota");
+  if (emDobro) {
+    prazoNotaEl.classList.remove("hidden");
+    prazoNotaEl.textContent = `Prazo em dobro aplicado (arts. 183 e 186, CPC — Fazenda Pública/MP; LC 80/94, arts. 44, I, 89, I e 128, I — Defensoria Pública): ${prazoBase} × 2 = ${prazoDias} dias úteis contados abaixo.`;
+  } else {
+    prazoNotaEl.classList.add("hidden");
+  }
+
+  // Monta as linhas do "Detalhamento do cálculo do prazo", no mesmo formato do Projudi:
+  // evento inicial -> Início do Prazo (negrito) -> dias não úteis relevantes -> Término do Prazo (negrito).
+  const linhas = [];
+  if (modoIntimacao === "dje") {
+    linhas.push({ date: disp, desc: "Leitura", hora: "23:59", milestone: false });
+    diasPuladosEntre(disp, termoInicial).forEach(item => {
+      linhas.push({ date: item.date, desc: formatarMotivo(item.motivo), milestone: false, naoUtil: true });
+    });
+  } else {
+    linhas.push({ date: disp, desc: "Disponibilização", milestone: false });
+    diasPuladosEntre(disp, publicacao).forEach(item => {
+      linhas.push({ date: item.date, desc: formatarMotivo(item.motivo), milestone: false, naoUtil: true });
+    });
+    linhas.push({ date: publicacao, desc: "Publicação", milestone: false });
+    diasPuladosEntre(publicacao, termoInicial).forEach(item => {
+      linhas.push({ date: item.date, desc: formatarMotivo(item.motivo), milestone: false, naoUtil: true });
+    });
+  }
+  linhas.push({ date: termoInicial, desc: `Início do Prazo (${prazoDias} dias úteis)`, milestone: true });
+
+  const { finalDate, passos } = contarDiasUteis(termoInicial, prazoDias);
+  // passos[0] é sempre o próprio termo inicial (dia 1) — já representado acima, então é ignorado aqui.
+  passos.slice(1).forEach((p, idx) => {
+    const ehUltimo = idx === passos.length - 2 && p.util;
+    if (ehUltimo) return; // será representado como "Término do Prazo" abaixo
+    if (p.util) {
+      linhas.push({ date: p.date, desc: capitalizar(DIAS_SEMANA[p.date.getDay()]), milestone: false });
+    } else {
+      linhas.push({ date: p.date, desc: formatarMotivo(p.motivo), milestone: false, naoUtil: true });
+    }
+  });
+  linhas.push({ date: finalDate, desc: "Término do Prazo", milestone: true });
+
+  const tbody = document.querySelector("#tabelaDetalhamento tbody");
+  tbody.innerHTML = "";
+  linhas.forEach(l => {
+    const tr = document.createElement("tr");
+    if (l.milestone) tr.classList.add("milestone");
+    if (l.naoUtil) tr.classList.add("naoutil");
+    const dataTxt = l.hora ? `${toBR(l.date)} às ${l.hora}` : toBR(l.date);
+    tr.innerHTML = `<td>${dataTxt}</td><td>${l.desc}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const datasRelevantes = [disp, termoInicial, finalDate];
+  if (publicacao) datasRelevantes.push(publicacao);
+  const alertaEl = document.getElementById("anoAlerta");
+  if (datasRelevantes.some(d => !dataDentroDoCalendarioCadastrado(d))) {
+    alertaEl.classList.remove("hidden");
+    alertaEl.textContent = "Atenção: parte desse cálculo cai fora do calendário específico cadastrado (ano de 2026, mais a suspensão de 01/01/2027 a 20/01/2027). Fora dessas faixas, só são considerados não úteis os sábados, domingos e feriados nacionais de data fixa — confirme manualmente feriados locais e prorrogações de prazo eventuais.";
+  } else {
+    alertaEl.classList.add("hidden");
+  }
+
+  document.getElementById("finalDate").textContent = toBR(finalDate);
+  document.getElementById("finalWd").textContent = DIAS_SEMANA[finalDate.getDay()];
+
+  const box = document.getElementById("resultBox");
+  if (countdownTimer) clearInterval(countdownTimer);
+
+  function atualizarCountdown() {
+    const agora = new Date();
+    const alvo = new Date(finalDate);
+    alvo.setHours(23,59,59,999);
+    const diffMs = alvo - agora;
+    const countdownEl = document.getElementById("countdown");
+    if (diffMs <= 0) {
+      box.classList.add("overdue");
+      countdownEl.textContent = "Prazo já vencido.";
+      if (countdownTimer) clearInterval(countdownTimer);
+      return;
+    }
+    box.classList.remove("overdue");
+    const diasCorridosRestantes = Math.floor(diffMs / (1000*60*60*24));
+    const horas = Math.floor((diffMs / (1000*60*60)) % 24);
+    const min = Math.floor((diffMs / (1000*60)) % 60);
+    const seg = Math.floor((diffMs / 1000) % 60);
+    countdownEl.innerHTML = `Faltam <b>${diasCorridosRestantes}</b> dia(s), <b>${String(horas).padStart(2,"0")}:${String(min).padStart(2,"0")}:${String(seg).padStart(2,"0")}</b>`;
+  }
+  atualizarCountdown();
+  countdownTimer = setInterval(atualizarCountdown, 1000);
+}
+
+// liga os campos de texto (colar/digitar) e os calendários customizados
+ligarCampoDataTexto("dispDate");
+ligarCampoDataTexto("leituraDate");
+criarCalendario("dispDate", "dispDatePicker", "dispDateCal");
+criarCalendario("leituraDate", "leituraDatePicker", "leituraDateCal");
+
+// preenche a data de hoje como padrão de conveniência
+document.getElementById("dispDate").value = toBR(new Date());
+</script>
+</body>
+</html>
