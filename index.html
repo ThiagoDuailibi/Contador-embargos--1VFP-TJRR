@@ -29,6 +29,7 @@
     margin: 0;
     padding: 32px 20px 48px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
     background: var(--paper);
     background-image: radial-gradient(circle at 50% 0%, #f8f9fb 0%, var(--paper) 62%);
     color: var(--ink);
@@ -37,7 +38,7 @@
 
   .masthead { text-align: center; margin-bottom: 30px; }
   .eyebrow {
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -47,15 +48,15 @@
   .masthead h1 {
     font-family: 'Source Serif 4', Georgia, serif;
     font-weight: 600;
-    font-size: 28px;
+    font-size: 33px;
     letter-spacing: -0.01em;
-    margin: 0 0 6px;
+    margin: 0 0 8px;
     color: var(--ink);
   }
   .masthead .subtitle {
     font-family: 'Source Serif 4', Georgia, serif;
     font-style: italic;
-    font-size: 13.5px;
+    font-size: 16px;
     color: var(--ink-soft);
     margin-bottom: 18px;
   }
@@ -70,7 +71,7 @@
     box-shadow: 0 1px 2px rgba(22,35,61,0.04);
   }
   .card h2 {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: .09em;
     text-transform: uppercase;
@@ -79,35 +80,36 @@
     padding-bottom: 10px;
     border-bottom: 1px solid var(--line);
   }
+  .card h2.h2-lg { font-size: 16px; }
   .form-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
   .field { display: flex; flex-direction: column; gap: 6px; }
-  label { font-size: 11.5px; color: var(--ink-soft); font-weight: 600; }
+  label { font-size: 16px; color: var(--ink-soft); font-weight: 600; }
   select, input[type="number"] {
     border: 1px solid var(--line);
     border-radius: 3px;
-    padding: 9px 11px;
-    font-size: 14px;
+    padding: 10px 12px;
+    font-size: 16.5px;
     color: var(--ink);
     background: #fff;
   }
-  select { font-family: 'Inter', sans-serif; min-width: 260px; }
+  select { font-family: 'Inter', sans-serif; min-width: 290px; }
   .date-combo input[type="text"] { font-family: 'IBM Plex Mono', 'Inter', monospace; }
   select:focus, input:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(156,107,31,0.14); }
-  input[type="number"] { width: 90px; }
-  .date-combo { position: relative; display: flex; align-items: center; width: 140px; }
-  .date-combo input[type="text"] { width: 140px; padding-right: 32px; }
+  input[type="number"] { width: 100px; }
+  .date-combo { position: relative; display: flex; align-items: center; width: 165px; }
+  .date-combo input[type="text"] { width: 165px; padding-right: 36px; font-size: 16.5px; }
   .date-combo input[type="text"].invalid { border-color: var(--red-over); background: var(--red-over-bg); }
   .date-picker-icon {
     position: absolute;
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1;
     border: none;
     background: transparent;
@@ -122,30 +124,30 @@
     top: calc(100% + 6px);
     left: 0;
     z-index: 20;
-    width: 240px;
+    width: 275px;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 4px;
     box-shadow: 0 8px 20px rgba(22,35,61,0.14);
-    padding: 12px;
+    padding: 14px;
   }
   .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .cal-label { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 13.5px; color: var(--ink); text-transform: capitalize; }
+  .cal-label { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 15.5px; color: var(--ink); text-transform: capitalize; }
   .cal-nav {
-    background: none; border: 1px solid var(--line); color: var(--ink); width: 24px; height: 24px;
-    border-radius: 3px; padding: 0; font-size: 13px; line-height: 1; cursor: pointer;
+    background: none; border: 1px solid var(--line); color: var(--ink); width: 28px; height: 28px;
+    border-radius: 3px; padding: 0; font-size: 15px; line-height: 1; cursor: pointer;
   }
   .cal-nav:hover { background: var(--sage-bg); }
   .cal-nav:disabled { opacity: .28; cursor: not-allowed; }
   .cal-nav:disabled:hover { background: none; }
   .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 2px; }
-  .cal-weekdays span { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .03em; color: var(--ink-faint); padding: 4px 0; }
+  .cal-weekdays span { text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: .03em; color: var(--ink-faint); padding: 4px 0; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
   .cal-day {
     position: relative;
     aspect-ratio: 1;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--ink);
     background: none; border: 1px solid transparent; border-radius: 3px; cursor: pointer; padding: 0;
   }
   .cal-day:hover { background: var(--sage-bg); }
@@ -163,8 +165,8 @@
     color: #fff;
     border: none;
     border-radius: 3px;
-    padding: 10px 20px;
-    font-size: 13.5px;
+    padding: 11px 22px;
+    font-size: 15.5px;
     font-weight: 600;
     cursor: pointer;
     transition: background .15s ease;
@@ -178,17 +180,17 @@
     background: var(--ink);
     color: #fff;
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: .06em;
     text-transform: uppercase;
-    padding: 9px 12px;
+    padding: 10px 14px;
     text-align: left;
   }
   table.detail-table tbody td {
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-bottom: none;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink);
   }
   table.detail-table tbody tr:nth-child(odd) { background: var(--sage-bg); }
@@ -206,18 +208,18 @@
   .result-box.overdue { background: var(--red-over-bg); border-color: var(--red-over); }
   .result-box .final-date {
     font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 30px;
+    font-size: 35px;
     font-weight: 700;
     color: var(--green-ok);
     margin: 4px 0;
     font-variant-numeric: tabular-nums;
   }
   .result-box.overdue .final-date { color: var(--red-over); }
-  .result-box .final-wd { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin-bottom: 10px; }
-  .countdown { font-size: 13px; color: var(--ink); margin-top: 8px; font-family: 'IBM Plex Mono', monospace; }
+  .result-box .final-wd { font-size: 13.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin-bottom: 10px; }
+  .countdown { font-size: 15px; color: var(--ink); margin-top: 8px; font-family: 'IBM Plex Mono', monospace; }
   .countdown b { font-variant-numeric: tabular-nums; }
   .legal-basis {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: var(--ink-soft);
     line-height: 1.7;
   }
@@ -226,23 +228,23 @@
     background: var(--amber-bg);
     border: 1px solid var(--amber-line);
     border-radius: 3px;
-    padding: 11px 13px;
-    font-size: 12.5px;
+    padding: 12px 15px;
+    font-size: 14.5px;
     color: var(--amber);
     line-height: 1.55;
     margin-top: 10px;
   }
-  .footer-note { font-size: 11px; color: var(--ink-faint); margin-top: 22px; text-align: center; line-height: 1.6; }
+  .footer-note { font-size: 13px; color: var(--ink-faint); margin-top: 22px; text-align: center; line-height: 1.6; }
   .version-badge {
     display: inline-block;
     background: #fff;
     border: 1px solid var(--brass);
     color: var(--brass);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     letter-spacing: .04em;
-    padding: 5px 14px;
+    padding: 6px 15px;
     border-radius: 999px;
     margin-top: 8px;
   }
@@ -258,7 +260,7 @@
   </header>
 
   <div class="card">
-    <h2>Dados da intimação</h2>
+    <h2 class="h2-lg">Dados da intimação</h2>
     <div class="form-row">
       <div class="field">
         <label for="modoIntimacao">Forma de intimação</label>
@@ -319,7 +321,7 @@
   </div>
 
   <div class="card">
-    <h2>Base legal e fonte dos dados</h2>
+    <h2 class="h2-lg">Base legal e fonte dos dados</h2>
     <div class="legal-basis">
       <b>Contagem em dias úteis:</b> art. 219, CPC.<br>
       <b>Exclusão do dia do começo / inclusão do vencimento / protração de início e vencimento para dia útil:</b> art. 224, caput e §1º, CPC.<br>
@@ -327,14 +329,15 @@
       <b>Termo inicial na intimação por Diário de Justiça eletrônico (DJEN):</b> art. 231, V, CPC c/c art. 4º, §3º, da Lei 11.419/2006; Resolução CNJ nº 455/2022, arts. 6º e 11, §3º — a publicação é considerada no 1º dia útil seguinte à disponibilização; o prazo começa a correr no 1º dia útil seguinte à publicação.<br>
       <b>Termo inicial na intimação pelo Domicílio Judicial Eletrônico (DJE):</b> a intimação considera-se realizada na data de leitura/consulta eletrônica, efetiva ou automática quando não há consulta em até 10 dias corridos do envio (art. 246, §1º-C, CPC, incluído pela Lei nº 14.195/2021, e Resolução CNJ nº 569/2024), e o prazo começa a correr no 1º dia útil seguinte a essa data (art. 231, VI, CPC).<br>
       <b>Prazo em dobro:</b> Fazenda Pública e Ministério Público — arts. 183 e 186, CPC (ressalvados os casos em que a lei fixar expressamente prazo próprio, art. 183, §2º, CPC); Defensoria Pública — LC nº 80/1994, arts. 44, I, 89, I, e 128, I. Como o Domicílio Judicial Eletrônico (DJE) é de uso obrigatório desses entes, o modo "DJE" aplica o dobro automaticamente (10 dias úteis); o modo "DJEN" não dobra o prazo.<br>
-      <b>Calendário de dias não úteis, feriados, pontos facultativos e prorrogações de prazo:</b> Projudi/TJRR (Decurso de Prazo — Dia Não Útil, ano 2026) e Portaria TJRR/PR nº 1558/2025 (Calendário de Feriados e Pontos Facultativos do TJRR — ano 2026), cadastrados e conferidos contra a lista oficial de feriados nacionais de 2026 e o calendário municipal de Boa Vista/RR. Suspensão de prazo de 01/01/2027 a 20/01/2027 incluída conforme informação repassada pelo usuário (sem número de portaria vinculado).
+      <b>Suspensão do prazo no recesso forense de fim de ano:</b> art. 220, caput, CPC — no período compreendido entre 20 de dezembro e 20 de janeiro, o prazo é suspenso por conta do art. 220 do CPC. Nos dias 20/12 a 06/01 não há expediente forense (Lei nº 5.010/1966, art. 62, I; Resolução CNJ nº 244/2016), de modo que a publicação também fica bloqueada; nos dias 07/01 a 20/01 o expediente ocorre normalmente e a publicação pode ser localizada com naturalidade, mas o início do prazo permanece travado até o fim da suspensão. Cadastrado para as duas viradas cobertas pelo calendário: 20/12/2025 a 20/01/2026 e 20/12/2026 a 20/01/2027.<br>
+      <b>Calendário de dias não úteis, feriados, pontos facultativos e prorrogações de prazo:</b> Projudi/TJRR (Decurso de Prazo — Dia Não Útil, ano 2026) e Portaria TJRR/PR nº 1558/2025 (Calendário de Feriados e Pontos Facultativos do TJRR — ano 2026), cadastrados e conferidos contra a lista oficial de feriados nacionais de 2026 e o calendário municipal de Boa Vista/RR.
     </div>
   </div>
 
   <footer style="text-align:center; margin-top:8px;">
     <div class="rule" style="margin-bottom:16px;"></div>
-    <div class="footer-note">Ferramenta de apoio — sempre confirme o prazo diretamente no Projudi/DJEN/Domicílio Judicial Eletrônico do processo. Calendário de dias não úteis cadastrado para o ano de 2026, além da suspensão de prazo de 01/01/2027 a 20/01/2027.</div>
-    <div class="version-badge">Versão 1.5 · Atualizado em 18/08/2026</div>
+    <div class="footer-note">Ferramenta de apoio — sempre confirme o prazo diretamente no Projudi/DJEN/Domicílio Judicial Eletrônico do processo. Calendário de dias não úteis cadastrado para o ano de 2026, incluindo a suspensão de prazo do art. 220, CPC, de 20/12/2025 a 20/01/2026 e de 20/12/2026 a 20/01/2027.</div>
+    <div class="version-badge">Versão 2.1 · Atualizado em 18/08/2026</div>
   </footer>
 </div>
 
@@ -343,11 +346,27 @@
 // Fontes: Projudi (Decurso de Prazo - Dia Não Útil / Prorrogação de Prazo) e
 // Portaria TJRR/PR nº 1558/2025 (Feriados Locais 2026), conferidas com feriados nacionais e calendário municipal de Boa Vista.
 const NAO_UTEIS_2026 = {
+  // Recesso forense (20/12/2025 a 06/01/2026) — sem expediente forense (Lei nº 5.010/1966, art. 62, I; Resolução CNJ nº 244/2016)
+  "2025-12-20": "Recesso Forense",
+  "2025-12-21": "Recesso Forense",
+  "2025-12-22": "Recesso Forense",
+  "2025-12-23": "Recesso Forense",
+  "2025-12-24": "Recesso Forense",
+  "2025-12-25": "Feriado Nacional — Natal / Recesso Forense",
+  "2025-12-26": "Recesso Forense",
+  "2025-12-27": "Recesso Forense",
+  "2025-12-28": "Recesso Forense",
+  "2025-12-29": "Recesso Forense",
+  "2025-12-30": "Recesso Forense",
+  "2025-12-31": "Recesso Forense",
   "2026-01-01": "Feriado Nacional (Confraternização Universal) / Recesso Forense",
   "2026-01-02": "Recesso Forense / Ponto Facultativo (ref. 01/01)",
   "2026-01-03": "Recesso Forense",
+  "2026-01-04": "Recesso Forense",
   "2026-01-05": "Recesso Forense",
   "2026-01-06": "Recesso Forense",
+  // 07/01 a 20/01/2026: expediente normal (não cadastrado aqui) — a suspensão do prazo nesse trecho
+  // é tratada à parte pela função motivoPrazoSuspensoArt220(), que não bloqueia a busca da publicação.
   "2026-01-19": "Ponto Facultativo (ref. 20/01) — Comarca de Boa Vista",
   "2026-01-20": "Feriado — Dia de São Sebastião (Comarca de Boa Vista)",
   "2026-02-16": "Ponto Facultativo — Segunda-feira de Carnaval",
@@ -382,6 +401,7 @@ const NAO_UTEIS_2026 = {
   "2026-11-20": "Feriado Nacional — Dia da Consciência Negra",
   "2026-12-07": "Ponto Facultativo (ref. 08/12)",
   "2026-12-08": "Feriado — Dia da Justiça e Nossa Senhora da Conceição",
+  // Recesso forense (20/12/2026 a 06/01/2027) — sem expediente forense (Lei nº 5.010/1966, art. 62, I; Resolução CNJ nº 244/2016)
   "2026-12-20": "Recesso Forense",
   "2026-12-21": "Recesso Forense",
   "2026-12-22": "Recesso Forense",
@@ -394,28 +414,32 @@ const NAO_UTEIS_2026 = {
   "2026-12-29": "Recesso Forense",
   "2026-12-30": "Recesso Forense",
   "2026-12-31": "Recesso Forense / Ponto Facultativo (ref. 01/01/2027)",
-  // Suspensão de prazo informada pelo usuário para janeiro/2027 (01/01/2027 a 20/01/2027)
-  "2027-01-01": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-02": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-03": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-04": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-05": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-06": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-07": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-08": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-09": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-10": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-11": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-12": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-13": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-14": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-15": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-16": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-17": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-18": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-19": "Suspensão de Prazo (01/01/2027 a 20/01/2027)",
-  "2027-01-20": "Suspensão de Prazo (01/01/2027 a 20/01/2027)"
+  "2027-01-01": "Feriado Nacional (Confraternização Universal) / Recesso Forense",
+  "2027-01-02": "Recesso Forense",
+  "2027-01-03": "Recesso Forense",
+  "2027-01-04": "Recesso Forense",
+  "2027-01-05": "Recesso Forense",
+  "2027-01-06": "Recesso Forense"
+  // 07/01 a 20/01/2027: expediente normal (não cadastrado aqui) — mesma observação acima.
 };
+
+// Suspensão do curso do prazo processual no recesso forense de fim de ano (art. 220, caput, CPC),
+// que vai além do período sem expediente (acima): entre 20/12 e 20/01, o prazo fica suspenso mesmo
+// nos dias em que o expediente já voltou ao normal (07/01 a 20/01) e publicações podem ocorrer.
+// Por isso NÃO entra em NAO_UTEIS_2026 (não deve bloquear a busca da publicação), só a contagem do prazo.
+const SUSPENSOES_PRAZO_ART220 = [
+  { inicio: "2025-12-20", fim: "2026-01-20" },
+  { inicio: "2026-12-20", fim: "2027-01-20" }
+];
+function motivoPrazoSuspensoArt220(d) {
+  const iso = toISO(d);
+  for (const periodo of SUSPENSOES_PRAZO_ART220) {
+    if (iso >= periodo.inicio && iso <= periodo.fim) {
+      return "No período compreendido entre 20 de dezembro e 20 de janeiro, o prazo é suspenso por conta do art. 220 do CPC.";
+    }
+  }
+  return null;
+}
 
 // Feriados nacionais de data fixa (art. 1º da Lei nº 6.802/80 c/c leis específicas) — válidos para qualquer ano,
 // usados como reforço quando o cálculo ultrapassa o calendário específico de 2026 cadastrado acima.
@@ -446,7 +470,10 @@ function addDays(d, n) {
   r.setDate(r.getDate() + n);
   return r;
 }
-function motivoNaoUtil(d) {
+// Dia sem expediente forense (feriados, pontos facultativos, prorrogações e o recesso forense
+// propriamente dito, 20/12 a 06/01). Usado para localizar a PUBLICAÇÃO, que pode ocorrer
+// normalmente a partir de 07/01, mesmo com o prazo ainda suspenso pelo art. 220, CPC.
+function motivoSemExpediente(d) {
   const wd = d.getDay();
   if (wd === 0) return "Domingo";
   if (wd === 6) return "Sábado";
@@ -456,16 +483,31 @@ function motivoNaoUtil(d) {
   if (FERIADOS_FIXOS_NACIONAIS[mmdd]) return FERIADOS_FIXOS_NACIONAIS[mmdd] + " (regra de data fixa — fora do calendário 2026 cadastrado)";
   return null;
 }
+// Motivo combinado (sem expediente OU prazo suspenso pelo art. 220), usado para exibição
+// (calendário e detalhamento) e para localizar o INÍCIO DO PRAZO e contar os dias seguintes.
+function motivoNaoUtil(d) {
+  return motivoSemExpediente(d) || motivoPrazoSuspensoArt220(d);
+}
+function isDiaDeExpediente(d) {
+  return motivoSemExpediente(d) === null;
+}
 function isBusinessDay(d) {
   return motivoNaoUtil(d) === null;
 }
 // Faixas com calendário específico efetivamente cadastrado (além da regra genérica de feriados fixos)
 function dataDentroDoCalendarioCadastrado(d) {
   const iso = toISO(d);
-  if (iso >= "2026-01-01" && iso <= "2026-12-31") return true;
+  if (iso >= "2025-12-20" && iso <= "2026-12-31") return true;
   if (iso >= "2027-01-01" && iso <= "2027-01-20") return true;
   return false;
 }
+// Próximo dia COM EXPEDIENTE (usado só para achar a publicação no modo DJEN — 1º salto).
+function nextExpedienteDayStrict(d) {
+  let r = addDays(d, 1);
+  while (!isDiaDeExpediente(r)) r = addDays(r, 1);
+  return r;
+}
+// Próximo dia ÚTIL PARA O PRAZO (usado para achar o início do prazo e para a contagem dos dias).
 function nextBusinessDayStrict(d) {
   let r = addDays(d, 1);
   while (!isBusinessDay(r)) r = addDays(r, 1);
@@ -576,8 +618,8 @@ function ligarCampoDataTexto(textId) {
 const MESES_PT = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
 const DIAS_SEMANA_CURTO = ["dom","seg","ter","qua","qui","sex","sáb"];
 
-// Faixa navegável/selecionável no calendário: 01/01/2026 a 20/01/2027
-const CAL_MIN = new Date(2026, 0, 1);
+// Faixa navegável/selecionável no calendário: 20/12/2025 a 20/01/2027
+const CAL_MIN = new Date(2025, 11, 20);
 const CAL_MAX = new Date(2027, 0, 20);
 function calMonthIndex(y, m) { return y * 12 + m; }
 const CAL_MIN_MONTH = calMonthIndex(CAL_MIN.getFullYear(), CAL_MIN.getMonth());
@@ -707,7 +749,7 @@ function calcular() {
     const dispEl = document.getElementById("dispDate");
     disp = parseDataFlexivel(dispEl.value);
     if (!disp) { alert("Informe uma data de disponibilização válida (DD/MM/AAAA)."); dispEl.classList.add("invalid"); return; }
-    publicacao = nextBusinessDayStrict(disp);
+    publicacao = nextExpedienteDayStrict(disp);
     termoInicial = nextBusinessDayStrict(publicacao);
   }
 
